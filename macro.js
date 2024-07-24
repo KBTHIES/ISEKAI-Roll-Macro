@@ -1,1 +1,3 @@
-console.log("hello World!");
+function runScript(userName) {
+  console.log(`Macro executed by: ${userName}`);
+}
