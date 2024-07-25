@@ -18,8 +18,7 @@ rolledStat
 
 
 function runScript(game, chara, attack, statLabel, rolledStat) {
-  console.log("game:");
   console.log(game);
   console.log(chara);
-  console.log("Is attack?: "${attack}"<br>Stat:"${statLabel}"<br>Stat Label:"${rolledStat});
+  console.log('Is attack?: '${attack}'<br>Stat:'${statLabel}'<br>Stat Label:'${rolledStat};
 }
