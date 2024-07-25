@@ -17,7 +17,7 @@ rolledStat
 */
 
 
-function runScript(game) {
+function runScript(game, chara, attack, statLabel, rolledStat) {
   console.log("game:");
   console.log(game);
   console.log(chara);
