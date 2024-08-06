@@ -947,6 +947,7 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
               // Xd6 vs Threshold
               chatMessage += (`<h3><span title="` + thresholdTooltip + `">${diceNumber}d6 against a threshold of ${verifiedThreshold}` + multiplierMessage + `</span></h3>`);
               chatMessage += (`<h2>${roll.total} Successes` + postedSuccessMessage + `</h2>`);
+              chatMessage += "</p><div style=\"padding:5px;line-height:2em;\"><span title=\"" + thresholdTooltip + "\">" + diceMessage + "</span></div><hr>";
             }
 
             // Modifiers
