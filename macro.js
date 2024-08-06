@@ -979,35 +979,41 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
   }, myDialogOptions);
 
   d.render(true);
+
+
+  /*#####################
+  #    Function City    #
+  #####################*/
+
+  // Turns rolled dice into green or grey icons
+  function diceMessageFormat(d, t) {
+
+    // If Maximized or Minimized, treat setDiceRoll as the dice result
+    if (setDiceRoll != 0) { d = setDiceRoll }
+
+    // This keeps track of when a pair of newlines are needed, or they'll overflow in an ugly way
+    diceCounter++;
+    // Add the die icon
+    diceMessage += `<i class="` + diceFormat[d] + ` fa-2xl" style="color: `;
+
+    // Threshold Validation
+    if (t > 6) {
+      t = Math.min(t, 6);
+    } else if (threshold < 1) {
+      t = Math.max(t, 1);
+    }
+
+    // Color the icon based on success or fail
+    if (d >= t) {
+      diceMessage += diceSucceedColor;
+      // Increase a global variable so we can track successful dice
+      targetSuccesses++;
+    } else {
+      diceMessage += diceFailColor;
+    }
+    diceMessage += `\;"></i> `;
+
+  } 
+
+
 }
-
-
-// Turns rolled dice into green or grey icons
-function diceMessageFormat(d, t) {
-
-  // If Maximized or Minimized, treat setDiceRoll as the dice result
-  if (setDiceRoll != 0) { d = setDiceRoll }
-
-  // This keeps track of when a pair of newlines are needed, or they'll overflow in an ugly way
-  diceCounter++;
-  // Add the die icon
-  diceMessage += `<i class="` + diceFormat[d] + ` fa-2xl" style="color: `;
-
-  // Threshold Validation
-  if (t > 6) {
-    t = Math.min(t, 6);
-  } else if (threshold < 1) {
-    t = Math.max(t, 1);
-  }
-
-  // Color the icon based on success or fail
-  if (d >= t) {
-    diceMessage += diceSucceedColor;
-    // Increase a global variable so we can track successful dice
-    targetSuccesses++;
-  } else {
-    diceMessage += diceFailColor;
-  }
-  diceMessage += `\;"></i> `;
-
-} 
