@@ -68,6 +68,7 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
   var diceCounter = 0;
   var ThresholdHidden = "";
   var thresholdTooltip = ""; // message that says how many successes per Threshold
+  var directValueCount = 0; // for Threshold Tooltip, counts how many dice are that exact value
 
   // Determines if the formula uses the old (Damage-DR) or new (Multi-DR) DR Systems
   var useOldDR = false;
@@ -772,6 +773,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
             let rollResults = roll.dice[0].results;
 
             function thresholdCheck(dice, thresh) {
+              if (dice.result == thresh) {
+                directValueCount++;
+              }
               if (dice.result >= thresh) {
                 loggedSuccesses++;
               }
@@ -779,8 +783,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
 
             for (let i = 1; i <= 6; i++) {
               loggedSuccesses = 0;
+              directValueCount = 0;
               rollResults.forEach((d) => thresholdCheck(d, i));
-              thresholdTooltip += "Threshold " + i + " - " + (loggedSuccesses + addsucc) + " Successes\n";
+              thresholdTooltip += "Threshold " + i + " - [" + directValueCount + "] - " + (loggedSuccesses + addsucc) + " Successes\n";
             }
 
             // If there's a Multiplier in a roll (or a multiplier of 0 in an attack), change readout to X Successes (Y Successes)
