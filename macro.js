@@ -911,19 +911,12 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
                   }
                 }
                 // Fifth and Final part is cleaning up the </>s
-                targetMessage += "</p><div style=\"padding:5px;line-height:2em;\"><span title=" + thresholdTooltip + ">" + diceMessage + "</span></div><hr>";
+                targetMessage += "</p><div style=\"padding:5px;line-height:2em;\"><span title=\"" + thresholdTooltip + "\">" + diceMessage + "</span></div><hr>";
                 targetMessage += "</details>";
               }
 
-
-
-
-
-              console.log("targetMessage");
+              console.log("<<-- targetMessage -->>");
               console.log(targetMessage);
-
-
-
 
               // Attack label for the chat log - Who's being attacked
               let targetLabel = "";
@@ -972,9 +965,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
               chatMessage += targetMessage;
             }
 
-            console.log("targetModifierBool");
+            console.log("<<-- targetModifierBool -->>");
             console.log(targetModifierBool);
-            console.log("chatMessage");
+            console.log("<<-- chatMessage -->>");
             console.log(chatMessage);
 
             // Player Made Edits
@@ -994,9 +987,6 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
               chatMessage += `[[/roll ${reroll}d6cs>=${4}]]{Reroll ${reroll}}`;
             }
             async function rerollTime(rerollVal) {
-              console.log(chara);
-              console.log(statLabel);
-              console.log(attack);
               return await game.macros.getName('ISEKAI Roll').execute({ chara: chara, statLabel: statLabel, rolledStat: rerollVal, attack: attack });
             }
 
