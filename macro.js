@@ -1,50 +1,11 @@
-/*
-The macro from the character sheet
-%{return await game.macros.getName('ISEKAI Roll').execute({chara: entity, statLabel:"Strength", rolledStat:"strmath", attack: true}) }%<br>${name}$ prepares to attack with Str
-%{consoleLog()}%
-
-What variables need to be passed?
-
-From the Game:
-game
-
-From the Character:
-chara
-attack
-statLabel
-rolledStat
-
-*/
-
-
 function runScript(game, chara, attack, statLabel, rolledStat) {
-  /*
-  console.log(game);
-  console.log(chara);
-  console.log(attack);
-  console.log(statLabel);
-  console.log(rolledStat);
-  */
-
+  
   //fetch stat name, # of dice, actor for Debuffs and Buffs. If GM, repeat rolls.
   // if it's an item, fetch damage multiplier , range, relevant Abilities
   // if it's a skill, add Experienced
   // add bonuses from Buffs and Debuffs
   // if there's someone targeted, grab their threshold?
   // add checkbox for Gear Kit Applicable?
-
-  /* What variables need to be passed?
-  
-  From the Game:
-  game
-  
-  From the Character:
-  chara
-  attack
-  statLabel
-  rolledStat
-  
-  */
 
   // If user isn't GM, hide the repeat rolls section
   GMHidden = "";
@@ -57,9 +18,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
     return ("ISEKAI Macro was run directly");
   }
 
-  /*################
+  /*###########################
   #    Initialize Variables   #
-  ################*/
+  ###########################*/
 
 
   const sl = statLabel; //string used for description
@@ -106,6 +67,7 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
   var diceSucceedColor = "#7aa574";
   var diceCounter = 0;
   var ThresholdHidden = "";
+  var thresholdTooltip = ""; // message that says how many successes per Threshold
 
   // Determines if the formula uses the old (Damage-DR) or new (Multi-DR) DR Systems
   var useOldDR = false;
@@ -142,9 +104,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
   var statDice = parseInt(Object.getOwnPropertyDescriptor(cp, rs).value); //Grabs value of the prop listed in rolledStat
   console.log(cp);
 
-  /*################################
+  /*#################################################
   #    Combat vs Narrative Formatting & Handling   #
-  #################################*/
+  ################################################*/
   //If it's an attack:
   // - say "(name) attacks (name) with (stat)!"
   // - set rolledThreshold to target threshold
@@ -157,9 +119,10 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
 
   var rollTitle = "";
   if (attackBool) {
-    /*##################
+    /*#######################
     #    Grab Target Data  #
-    ##################*/
+    ######################*/
+
     //If there's a token targeted, grab their armor threshold
 
     if (game.user.targets.size > 0) {
@@ -240,9 +203,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
         targetMessage += `<input type=\"button\" onclick=\"changeValue(threshold` + i + `, 1);\" value = \"+\"></input>`;
         targetMessage += `<input type=\"button\" onclick=\"changeValue(threshold` + i + `, -1);\" value = \"-\"></input></span>`;
 
-        /*##############
+       /*########################
        #    Target Modifiers   #
-       ##############*/
+       #######################*/
         // I just want these to output messages, since code now accounts for vales by target
         // Looks through the targets and looks for modifiers
         if (targetActorArray[i].dr != 0) {
@@ -272,9 +235,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
 
 
 
-      /*##############
+      /*######################
       #    Weapon Chooser   #
-      ##############*/
+      #####################*/
       grabWeapons();
 
       function grabWeapons() {
@@ -359,9 +322,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
 
   } else {
     // Whatever needs to be done if it's not an attack
-    /*##################
+    /*##############################
     #    Narrative Roll Handler   #
-    ##################*/
+    #############################*/
 
     // We don't want to display the target or weapon messages in the roll pop-up
     targetMessage = "";
@@ -385,9 +348,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
     }
   }
 
-  /*##################
+  /*#############################
   #    Buff & Debuff Handler   #
-  ##################*/
+  ############################*/
   //modifiersPresent - boolean is False, if any relevant buff is present then flip it to True
   // also append it to modifier list.
   function addModifier(modifierString) {
@@ -395,17 +358,17 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
     modifierMessage += "<li>" + modifierString + "</li>";
   }
 
-  /*===============\
+  /*=======================\
   |     Number of Dice     |
-  \===============*/
+  \=======================*/
   /* #### Player Statuses ####*/
   if (cp.buffAddD6 != 0) {
     statDice += parseInt(cp.buffAddD6);
     addModifier("+" + cp.buffAddD6 + "D6");
   }
-  /*==========\
+  /*=================\
   |    Threshold     |
-  \==========*/
+  \=================*/
   /* #### Experienced ####*/
   //look at rs, skills should be named __Exp, like appl and applExp
   // if __Exp is false or not present (like instmodExp) then ignore
@@ -428,9 +391,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
     rolledThreshold += parseInt(cp.debuffTI);
     addModifier("TI " + cp.debuffTI);
   }
-  /*===================\
+  /*=============================\
   |     Multiplier / Min / Max   |
-  \===================*/
+  \=============================*/
   /* #### Player Statuses ####*/
   if (cp.buffAddMultiplier != 0) {
     rolledMultiplier += parseInt(cp.buffAddMultiplier);
@@ -451,17 +414,17 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
       addModifier("Roll Maximized and Minimized, no change");
     }
   }
-  /*=======\
+  /*==============\
   |    Reroll     |
-  \=======*/
+  \==============*/
   /* #### Player Statuses ####*/
   if (cp.buffReroll != 0) {
     rolledReroll += parseInt(cp.buffReroll);
     addModifier("Reroll " + cp.buffReroll);
   }
-  /*==================\
+  /*===========================\
   |     Additional Successes   |
-  \==================*/
+  \===========================*/
   /* #### Player Statuses ####*/
   if (cp.buffAddSuccesses != 0) {
     rolledAddedSuccesses += parseInt(cp.buffAddSuccesses);
@@ -490,9 +453,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
 
   let confirmed = false;
 
-  /*#############
+  /*#####################
   #    Create Dialog   #
-  #############*/
+  ####################*/
   const myDialogOptions = {
     width: 400,
     /* height: 400, */
@@ -622,9 +585,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
     close: html => {
       if (confirmed) {
 
-        /*#############
+        /*######################
         #    Dice Roll Math   #
-        #############*/
+        #####################*/
 
         // Grab all of the entered variables
         let gearBool = html.find('[name=gearCheck]')[0].checked;
@@ -693,9 +656,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
           console.log(unparsedWeapon[3]);
           }*/
 
-          /*####################
+          /*################################
           #    Dice Roll Math Modifiers   #
-          ###################*/
+          ###############################*/
 
           // Add weapon multiplier to the added multiplier
           // Remember, with attacks, the Multiplier is set to 0 instead of 1 by default
@@ -729,9 +692,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
                         }
         */
 
-        /*#############
+        /*######################
         #    Roll Insurance   #
-        #############*/
+        #####################*/
         // Warns the user if something's up, as well as pushes a warning into the console
         function addWarning(warningString) {
           ui.notifications.info(warningString);
@@ -783,9 +746,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
           repeatRolls = 1;
         }
 
-        /*#########
+        /*################
         #    The Roll    #
-        #########*/
+        ################*/
         for (let i = 0; i < repeatRolls; i++) {
 
           ISEKAIRoll(rollFormula, threshold, addsucc, multiplier, diceNumber, preThreshold);
@@ -806,7 +769,6 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
             }
 
             // If you hover over the roll macro, it'll list successes by threshold
-            let thresholdTooltip = "";
             let rollResults = roll.dice[0].results;
 
             function thresholdCheck(dice, thresh) {
@@ -844,9 +806,9 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
             // Roll Type
             if (attackBool) {
 
-              /*############################
+              /*############################################
               #   Reformat targetMessage for the attack   #
-              ############################*/
+              ##########################################*/
 
               console.log(targetActorArray);
 
@@ -949,7 +911,7 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
                   }
                 }
                 // Fifth and Final part is cleaning up the </>s
-                targetMessage += "</p><div style=\"padding:5px;line-height:2em;\">" + diceMessage + "</div><hr>";
+                targetMessage += "</p><div style=\"padding:5px;line-height:2em;\"><span title=" + thresholdTooltip + ">" + diceMessage + "</span></div><hr>";
                 targetMessage += "</details>";
               }
 
@@ -979,12 +941,12 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
               /*#### Values that I want to hide if they're an attack ####*/
               /*
               ##########################################
-                                          // Xd6 vs Threshold, Multiplier
-                                          chatMessage += (`<h3><span title="` + thresholdTooltip + `">${diceNumber}d6 against a threshold of ${verifiedThreshold}`+ multiplierMessage +`</span></h3>`);
-                                      
-                                          // If damage, we want a tooltip that shows what it would be halved
-                                          let damageTooltip = "Halves to " + Math.ceil(roll.total/2);
-                                          chatMessage += (`<h2><span title="` + damageTooltip + `">${roll.total} Damage</span>` + postedSuccessMessage + `</h2>`);
+              // Xd6 vs Threshold, Multiplier
+              chatMessage += (`<h3><span title="` + thresholdTooltip + `">${diceNumber}d6 against a threshold of ${verifiedThreshold}`+ multiplierMessage +`</span></h3>`);
+          
+              // If damage, we want a tooltip that shows what it would be halved
+              let damageTooltip = "Halves to " + Math.ceil(roll.total/2);
+              chatMessage += (`<h2><span title="` + damageTooltip + `">${roll.total} Damage</span>` + postedSuccessMessage + `</h2>`);
               ##########################################
               */
             } else {
@@ -1015,12 +977,6 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
             console.log("chatMessage");
             console.log(chatMessage);
 
-
-
-            /*
-                                    // Show the Dice Rolled
-                                    chatMessage += `<br>` + diceMessage;
-            */
             // Player Made Edits
             if (playerMadeEdits) {
               if (modifiersPresent || targetModifierBool) {
