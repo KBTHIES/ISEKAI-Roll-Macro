@@ -945,10 +945,10 @@ function runScript(game, chara, attack, statLabel, rolledStat) {
             } else {
               chatMessage += ` check</h4>`;
               // Xd6 vs Threshold
+              roll.dice[0].results.forEach((d) => diceMessageFormat(d.result, verifiedThreshold));
               chatMessage += (`<h3><span title="` + thresholdTooltip + `">${diceNumber}d6 against a threshold of ${verifiedThreshold}` + multiplierMessage + `</span></h3>`);
-              chatMessage += (`"<details><summary style=\"font-size: 1.25em\">"${roll.total} Successes` + postedSuccessMessage + `</summary>`);
-              ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-              chatMessage += "<div style=\"padding:5px;line-height:2em;\"><span title=\"" + thresholdTooltip + "\">" + diceMessage + "</span></div><hr></details>";
+              chatMessage += (`<details><summary style=\"font-size: 1.25em\">${roll.total} Successes` + postedSuccessMessage + `</summary>`);
+              chatMessage += "<div style=\"padding:5px;line-height:2em;\"><span title=\"" + thresholdTooltip + "\">" + diceMessage + "</span></div></details><hr>";
             }
 
             // Modifiers
